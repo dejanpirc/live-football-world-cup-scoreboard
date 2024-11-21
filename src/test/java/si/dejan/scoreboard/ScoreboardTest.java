@@ -13,7 +13,7 @@ public class ScoreboardTest {
         
         scoreboard.startMatch(match);
 
-        assert(match.getHomeScore() == 0);
-        assert(match.getAwayScore() == 0);
+        assert(match.getHomeTeam().getScore() == 0);
+        assert(match.getAwayTeam().getScore() == 0);
     }
 }
