@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class TeamTest {
     
-    private void assertTeamName(String name) {
+    private void assertInvalidTeamName(String name) {
         Exception exception = assertThrows(Exception.class, () -> { Team team = new Team(name); });
         
         assertEquals("Invalid team name!", exception.getMessage());
@@ -15,16 +15,25 @@ public class TeamTest {
 
     @Test
     public void newTeam_teamNameIsNull_throwsException(){
-        assertTeamName(null);
+        assertInvalidTeamName(null);
     }
 
     @Test
     public void newTeam_teamNameContainsNumber_throwsException(){
-        assertTeamName("Team1");
+        assertInvalidTeamName("Team1");
     }
 
     @Test
     public void newTeam_teamNameContainsSymbol_throwsException(){
-        assertTeamName("Team!");
+        assertInvalidTeamName("Team!");
+    }
+
+    @Test
+    public void newTeam_teamNameContainsForeignLetters_createsTeamClass(){
+        String name = "Teamščžüöäëíí";
+
+        Team team = new Team(name);
+
+        assertEquals(name, team.getName());
     }
 }
