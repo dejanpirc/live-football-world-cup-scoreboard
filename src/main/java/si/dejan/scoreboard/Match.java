@@ -5,6 +5,9 @@ public class Match {
     private Team awayTeam;
 
     public Match(Team homeTeam, Team awayTeam) {
+        if (homeTeam == null || awayTeam == null) {
+            throw new NullPointerException("Home and away teams must be set!");
+        }
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
     }
