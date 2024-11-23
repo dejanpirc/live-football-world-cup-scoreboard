@@ -52,4 +52,52 @@ public class ScoreboardTest {
         assert (match.getHomeTeam().getScore() == 1);
         assert (match.getAwayTeam().getScore() == 2);
     }
+
+    @Test
+    public void updateScore_matchIsNotLive_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
+        assertEquals("Match must be live!", exception.getMessage());
+    }
+
+    @Test
+    public void updateScore_oneOfTheTeamsScoreIsNegative_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, 2));
+        assertEquals("Score cannot be negative!", exception.getMessage());
+    }
+
+    @Test
+    public void updateScore_homeAndAwayScoresAreNegative_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, -2));
+        assertEquals("Score cannot be negative!", exception.getMessage());
+    }
+
+    @Test
+    public void updateScore_matchHasAlreadyEnded_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        scoreboard.endMatch(match);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
+        assertEquals("Match has already ended!", exception.getMessage());
+    }
 }
