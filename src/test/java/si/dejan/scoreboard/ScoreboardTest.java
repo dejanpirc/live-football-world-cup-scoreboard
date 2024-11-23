@@ -100,4 +100,12 @@ public class ScoreboardTest {
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
         assertEquals("Match has already ended!", exception.getMessage());
     }
+
+    @Test
+    public void updateScore_matchIsNotSet_throwsException() {
+        Scoreboard scoreboard = new Scoreboard();
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(null, 1, 2));
+        assertEquals("Match must be set!", exception.getMessage());
+    }
 }
