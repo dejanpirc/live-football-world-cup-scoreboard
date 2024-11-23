@@ -61,7 +61,7 @@ public class ScoreboardTest {
         Scoreboard scoreboard = new Scoreboard();
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
-        assertEquals("Match must be live!", exception.getMessage());
+        assertEquals("Only live matches can be updated!", exception.getMessage());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ScoreboardTest {
         scoreboard.startMatch(match);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, 2));
-        assertEquals("Score cannot be negative!", exception.getMessage());
+        assertEquals("Score must be positive!", exception.getMessage());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ScoreboardTest {
         scoreboard.startMatch(match);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, -2));
-        assertEquals("Score cannot be negative!", exception.getMessage());
+        assertEquals("Score must be positive!", exception.getMessage());
     }
 
     @Test

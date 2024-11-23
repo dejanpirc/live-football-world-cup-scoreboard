@@ -3,6 +3,7 @@ package si.dejan.scoreboard;
 public class Team {
     private String name;
     private int score;
+    private String id;
     
     public Team(String name) {
         if (name == null) {
@@ -12,7 +13,12 @@ public class Team {
         if (!name.matches("[\\p{L}]+")) {
             throw new IllegalArgumentException("Invalid team name!");
         }
+        this.id = java.util.UUID.randomUUID().toString();
         this.name = name;        
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -30,4 +36,13 @@ public class Team {
     public void setScore(int score) {
         this.score = score;
     }   
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Team) {
+            Team otherTeam = (Team) obj;
+            return this.id.equals(otherTeam.getId());
+        }
+        return false;
+    }
 }
