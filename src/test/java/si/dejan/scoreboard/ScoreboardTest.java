@@ -26,4 +26,16 @@ public class ScoreboardTest {
         Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(null));
         assertEquals("Match must be set!", exception.getMessage());
     }
+
+    @Test
+    public void startMatch_teamIsAlreadyPlayingInOtherMatch_throwsException(){
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match));
+        assertEquals("Invalid match: team Mexico is already playing in other match!", exception.getMessage());
+    }
 }
