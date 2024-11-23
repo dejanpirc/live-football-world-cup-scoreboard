@@ -37,4 +37,9 @@ public class Scoreboard {
         match.getHomeTeam().setScore(0);
         match.getAwayTeam().setScore(0);
     }
+
+    public void updateScore(Match match, int homeTeamScore, int awayTeamScore) {
+        match.getHomeTeam().setScore(homeTeamScore);
+        match.getAwayTeam().setScore(awayTeamScore);
+    }
 }
