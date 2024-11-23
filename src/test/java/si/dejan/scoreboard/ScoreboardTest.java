@@ -1,5 +1,7 @@
 package si.dejan.scoreboard;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class ScoreboardTest {
@@ -15,5 +17,13 @@ public class ScoreboardTest {
 
         assert(match.getHomeTeam().getScore() == 0);
         assert(match.getAwayTeam().getScore() == 0);
+    }
+
+    @Test
+    public void startMatch_matchIsNotSet_throwsException(){
+        Scoreboard scoreboard = new Scoreboard();
+        
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(null));
+        assertEquals("Match must be set!", exception.getMessage());
     }
 }
