@@ -280,7 +280,7 @@ public class ScoreboardTest {
 
         assertEquals("1. Uruguay 6 - Italy 6\n" +
                 "2. Spain 10 - Brazil 2\n" +
-                "3. Mexico 1 - Canada 5\n" +
+                "3. Mexico 0 - Canada 5\n" +
                 "4. Argentina 3 - Australia 1\n" +
                 "5. Germany 2 - France 2", summary);
     }
