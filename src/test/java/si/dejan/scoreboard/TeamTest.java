@@ -15,7 +15,9 @@ public class TeamTest {
 
     @Test
     public void newTeam_teamNameIsNull_throwsException(){
-        assertInvalidTeamName(null);
+        Exception exception = assertThrows(Exception.class, () -> { Team team = new Team(null); });
+        
+        assertEquals("Name must be set!", exception.getMessage());
     }
 
     @Test
