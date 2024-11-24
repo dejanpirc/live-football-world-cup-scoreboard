@@ -70,7 +70,7 @@ public class ScoreboardTest {
         Match match2 = new Match(homeTeam2, awayTeam2);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+        assertEquals("Invalid match: team Canada is already playing in another match!", exception.getMessage());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ScoreboardTest {
         Match match2 = new Match(homeTeam2, awayTeam2);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+        assertEquals("Invalid match: team mexico is already playing in another match!", exception.getMessage());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ScoreboardTest {
         Match match2 = new Match(homeTeam2, awayTeam2);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team Canada is already playing in another match!", exception.getMessage());
+        assertEquals("Invalid match: team canada is already playing in another match!", exception.getMessage());
     }
 
     @Test
