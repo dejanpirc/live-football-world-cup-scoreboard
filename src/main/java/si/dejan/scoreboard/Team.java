@@ -16,15 +16,11 @@ public class Team {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }   
-
     public int getScore() {
-        return score;
+        return this.score;
     }
 
     public void setScore(int score) {
@@ -35,8 +31,13 @@ public class Team {
     public boolean equals(Object obj) {
         if (obj instanceof Team) {
             Team otherTeam = (Team) obj;
-            return this.name.toLowerCase().equals(otherTeam.getName().toLowerCase());
+            return this.name.equalsIgnoreCase(otherTeam.getName());
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.toLowerCase().hashCode();
     }
 }
