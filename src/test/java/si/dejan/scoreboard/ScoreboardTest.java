@@ -224,4 +224,40 @@ public class ScoreboardTest {
 
         assertEquals("Only live matches can be ended!", exception.getMessage());
     }
+
+    @Test
+    public void getSummary_oneLiveMatch_returnsSummaryOfLiveMathes(){
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        scoreboard.updateScore(match, 1, 2);
+
+        String summary = scoreboard.getSummary();
+
+        assertEquals("1. Mexico 1 - Canada 2", summary);
+    }
+
+    @Test
+    public void getSummary_oneLiveMatchWithNoGoals_returnsSummaryOfLiveMathes(){
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+
+        String summary = scoreboard.getSummary();
+
+        assertEquals("1. Mexico 0 - Canada 0", summary);
+    }
+
+    @Test
+    public void getSummary_noLiveMatches_returnsMessageForNoLiveMatches(){
+        Scoreboard scoreboard = new Scoreboard();
+        
+        String summary = scoreboard.getSummary();
+
+        assertEquals("No live matches.", summary);
+    }
 }

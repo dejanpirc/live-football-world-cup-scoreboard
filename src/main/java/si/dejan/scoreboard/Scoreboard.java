@@ -16,13 +16,15 @@ public class Scoreboard {
             throw new NullPointerException("Match must be set!");
         }
         // check if one of the teams is already playing in another match
-        return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam()) || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
+        return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam())
+                || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
     }
 
     private boolean checkIfTeamIsPlayingInOtherMatch(Team team) throws InvalidParameterException {
         for (Match match : liveMatches) {
             if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
-                throw new InvalidParameterException("Invalid match: team " + team.getName() + " is already playing in another match!");
+                throw new InvalidParameterException(
+                        "Invalid match: team " + team.getName() + " is already playing in another match!");
             }
         }
         return false;
@@ -31,7 +33,7 @@ public class Scoreboard {
     public void startMatch(Match match) {
         // validate
         validateMatch(match);
-        
+
         liveMatches.add(match);
         // todo optimise this to call method in match to set scores to 0
         match.getHomeTeam().setScore(0);
@@ -45,21 +47,21 @@ public class Scoreboard {
         if (homeTeamScore < 0 || awayTeamScore < 0) {
             throw new InvalidParameterException("Score must be positive!");
         }
-        if(!liveMatches.contains(match)) {
+        if (!liveMatches.contains(match)) {
             throw new InvalidParameterException("Only live matches can be updated!");
         }
-        
+
         match.getHomeTeam().setScore(homeTeamScore);
         match.getAwayTeam().setScore(awayTeamScore);
     }
 
     public void endMatch(Match match) {
-        if(match == null) {
+        if (match == null) {
             throw new NullPointerException("Match must be set!");
         }
         if (!liveMatches.contains(match)) {
             throw new InvalidParameterException("Only live matches can be ended!");
-        } 
+        }
 
         liveMatches.remove(match);
     }
@@ -68,4 +70,27 @@ public class Scoreboard {
         return liveMatches.contains(match);
     }
 
+    public String getSummary() {
+        String summary = "";
+
+        if (!liveMatches.isEmpty()) {
+            for (int i = 0; i < liveMatches.size(); i++) {
+                Match match = liveMatches.get(i);
+                summary += String.format("%d. %s %d - %s %d",
+                        i + 1,
+                        match.getHomeTeam().getName(),
+                        match.getHomeTeam().getScore(),
+                        match.getAwayTeam().getName(),
+                        match.getAwayTeam().getScore());
+
+                if (i < liveMatches.size() - 1) {
+                    summary += "\n";
+                }
+            }
+        } else {
+            summary = "No live matches.";
+        }
+
+        return summary;
+    }
 }
