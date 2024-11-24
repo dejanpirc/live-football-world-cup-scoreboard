@@ -9,7 +9,7 @@ public class Scoreboard {
 
     private List<Match> liveMatches = new ArrayList<>();
 
-    // sort live matches by total score and recently started
+    // compare live matches by total score and recently started
     Comparator<Match> totalScoreComparator = (match1, match2) -> {
         // sorty by total score
         int totalScore1 = match1.getHomeTeam().getScore() + match1.getAwayTeam().getScore();
@@ -30,25 +30,6 @@ public class Scoreboard {
             return Integer.compare(match2Index, match1Index);
         }
     };
-
-    private boolean validateMatch(Match match) throws InvalidParameterException {
-        if (match == null) {
-            throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
-        }
-        // check if one of the teams is already playing in another match
-        return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam())
-                || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
-    }
-
-    private boolean checkIfTeamIsPlayingInOtherMatch(Team team) throws InvalidParameterException {
-        for (Match match : liveMatches) {
-            if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
-                throw new InvalidParameterException(
-                        String.format(ErrorMessages.TEAM_ALREADY_PLAYING.getMessage(), team.getName()));
-            }
-        }
-        return false;
-    }
 
     public void startMatch(Match match) {
         // validate
@@ -116,5 +97,24 @@ public class Scoreboard {
         }
 
         return summary.toString();
+    }
+
+    private boolean validateMatch(Match match) throws InvalidParameterException {
+        if (match == null) {
+            throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
+        }
+        // check if one of the teams is already playing in another match
+        return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam())
+                || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
+    }
+
+    private boolean checkIfTeamIsPlayingInOtherMatch(Team team) throws InvalidParameterException {
+        for (Match match : liveMatches) {
+            if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
+                throw new InvalidParameterException(
+                        String.format(ErrorMessages.TEAM_ALREADY_PLAYING.getMessage(), team.getName()));
+            }
+        }
+        return false;
     }
 }

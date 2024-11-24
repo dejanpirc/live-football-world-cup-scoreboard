@@ -41,70 +41,22 @@ public class ScoreboardTest {
 
     @Test
     public void startMatch_homeTeamWithTheSameNameIsAlreadyPlayingInAnotherMatch_throwsException() {
-        // match 1
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
-        // match 2
-        Team homeTeam2 = new Team("Mexico");
-        Team awayTeam2 = new Team("Slovenia");
-        Match match2 = new Match(homeTeam2, awayTeam2);
-
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+        assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "Mexico", "Slovenia", "Invalid match: team Mexico is already playing in another match!");
     }
 
     @Test
     public void startMatch_awayTeamWithTheSameNameIsAlreadyPlayingInAnotherMatch_throwsException() {
-        // match 1
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
-        // match 2
-        Team homeTeam2 = new Team("Germany");
-        Team awayTeam2 = new Team("Canada");
-        Match match2 = new Match(homeTeam2, awayTeam2);
-
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team Canada is already playing in another match!", exception.getMessage());
+        assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "Germany", "Canada", "Invalid match: team Canada is already playing in another match!");
     }
 
     @Test
     public void startMatch_sameHomeTeamNameWithDifferentTextCase_throwsException() {
-        // match 1
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
-        // match 2
-        Team homeTeam2 = new Team("mexico");
-        Team awayTeam2 = new Team("Slovenia");
-        Match match2 = new Match(homeTeam2, awayTeam2);
-
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team mexico is already playing in another match!", exception.getMessage());
+        assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "mexico", "Slovenia", "Invalid match: team mexico is already playing in another match!");
     }
 
     @Test
     public void startMatch_sameAwayTeamNameWithDifferentTextCase_throwsException() {
-        // match 1
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
-        // match 2
-        Team homeTeam2 = new Team("Croatia");
-        Team awayTeam2 = new Team("canada");
-        Match match2 = new Match(homeTeam2, awayTeam2);
-
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
-        assertEquals("Invalid match: team canada is already playing in another match!", exception.getMessage());
+        assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "Croatia", "canada", "Invalid match: team canada is already playing in another match!");
     }
 
     @Test
@@ -133,27 +85,18 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void updateScore_oneOfTheTeamsScoreIsNegative_throwsException() {
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
+    public void updateScore_homeTeamScoreIsNegative_throwsException() {
+        assertThrowsInvalidScoreException(-1, 2);
+    }
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, 2));
-        assertEquals("Score must be positive!", exception.getMessage());
+    @Test
+    public void updateScore_awayTeamScoreIsNegative_throwsException() {
+        assertThrowsInvalidScoreException(1, -2);
     }
 
     @Test
     public void updateScore_homeAndAwayScoresAreNegative_throwsException() {
-        Team homeTeam = new Team("Mexico");
-        Team awayTeam = new Team("Canada");
-        Match match = new Match(homeTeam, awayTeam);
-        Scoreboard scoreboard = new Scoreboard();
-        scoreboard.startMatch(match);
-
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, -1, -2));
-        assertEquals("Score must be positive!", exception.getMessage());
+        assertThrowsInvalidScoreException(-1, -2);
     }
 
     @Test
@@ -261,12 +204,6 @@ public class ScoreboardTest {
         assertEquals("No live matches.", summary);
     }
 
-    private void startMatchAndUpdateScore(Scoreboard scoreboard, String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
-        Match match = new Match(new Team(homeTeamName), new Team(awayTeamName));
-        scoreboard.startMatch(match);
-        scoreboard.updateScore(match, homeScore, awayScore);
-    }
-
     @Test
     public void getSummary_multipleLiveMatches_returnsSummaryOfLiveMathesOrderedByMatchTotalScoreAndRecentlyStarted() {
         Scoreboard scoreboard = new Scoreboard();
@@ -283,5 +220,38 @@ public class ScoreboardTest {
                 "3. Mexico 0 - Canada 5\n" +
                 "4. Argentina 3 - Australia 1\n" +
                 "5. Germany 2 - France 2", summary);
+    }
+
+    private void startMatchAndUpdateScore(Scoreboard scoreboard, String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
+        Match match = new Match(new Team(homeTeamName), new Team(awayTeamName));
+        scoreboard.startMatch(match);
+        scoreboard.updateScore(match, homeScore, awayScore);
+    }
+
+    private void assertTeamAlreadyPlayingInAnotherMatch(String match1HomeTeam, String match1AwayTeam, String match2HomeTeam, String match2AwayTeam, String errorMessage) {
+        // match 1
+        Team homeTeam = new Team(match1HomeTeam);
+        Team awayTeam = new Team(match1AwayTeam);
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        // match 2
+        Team homeTeam2 = new Team(match2HomeTeam);
+        Team awayTeam2 = new Team(match2AwayTeam);
+        Match match2 = new Match(homeTeam2, awayTeam2);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        assertEquals(errorMessage, exception.getMessage());
+    }
+
+    private void assertThrowsInvalidScoreException(int homeScore, int awayScore) {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, homeScore, awayScore));
+        assertEquals("Score must be positive!", exception.getMessage());
     }
 }

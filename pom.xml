@@ -6,7 +6,24 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>live-football-world-cup-scoreboard</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/dejanpirc/live-football-world-cup-scoreboard</url>
+  
+  <developers>
+      <developer>
+          <id>dpirc</id>
+          <name>Dejan Pirc</name>
+          <url>https://github.com/dejanpirc/live-football-world-cup-scoreboard</url>
+          <roles>
+            <role>architect</role>
+            <role>developer</role>
+          </roles>
+      </developer>
+  </developers>
+
+  <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+    </properties>
 
   <dependencies>
       <dependency>
