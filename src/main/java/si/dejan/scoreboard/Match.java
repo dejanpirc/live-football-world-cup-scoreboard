@@ -35,4 +35,9 @@ public class Match {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
 }
