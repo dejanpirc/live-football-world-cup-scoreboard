@@ -118,7 +118,7 @@ public class ScoreboardTest {
         scoreboard.updateScore(match, 1, 2);
 
         assertEquals(1, match.getHomeTeam().getScore());
-        assertEquals(2,match.getAwayTeam().getScore());
+        assertEquals(2, match.getAwayTeam().getScore());
     }
 
     @Test
@@ -226,7 +226,7 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void getSummary_oneLiveMatch_returnsSummaryOfLiveMathes(){
+    public void getSummary_oneLiveMatch_returnsSummaryOfLiveMathes() {
         Team homeTeam = new Team("Mexico");
         Team awayTeam = new Team("Canada");
         Match match = new Match(homeTeam, awayTeam);
@@ -240,7 +240,7 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void getSummary_oneLiveMatchWithNoGoals_returnsSummaryOfLiveMathes(){
+    public void getSummary_oneLiveMatchWithNoGoals_returnsSummaryOfLiveMathes() {
         Team homeTeam = new Team("Mexico");
         Team awayTeam = new Team("Canada");
         Match match = new Match(homeTeam, awayTeam);
@@ -253,11 +253,35 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void getSummary_noLiveMatches_returnsMessageForNoLiveMatches(){
+    public void getSummary_noLiveMatches_returnsMessageForNoLiveMatches() {
         Scoreboard scoreboard = new Scoreboard();
-        
+
         String summary = scoreboard.getSummary();
 
         assertEquals("No live matches.", summary);
+    }
+
+    private void startMatchAndUpdateScore(Scoreboard scoreboard, String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
+        Match match = new Match(new Team(homeTeamName), new Team(awayTeamName));
+        scoreboard.startMatch(match);
+        scoreboard.updateScore(match, homeScore, awayScore);
+    }
+
+    @Test
+    public void getSummary_multipleLiveMatches_returnsSummaryOfLiveMathesOrderedByMatchTotalScoreAndRecentlyStarted() {
+        Scoreboard scoreboard = new Scoreboard();
+        startMatchAndUpdateScore(scoreboard, "Mexico", "Canada", 0, 5);
+        startMatchAndUpdateScore(scoreboard, "Spain", "Brazil", 10, 2);
+        startMatchAndUpdateScore(scoreboard, "Germany", "France", 2, 2);
+        startMatchAndUpdateScore(scoreboard, "Uruguay", "Italy", 6, 6);
+        startMatchAndUpdateScore(scoreboard, "Argentina", "Australia", 3, 1);
+
+        String summary = scoreboard.getSummary();
+
+        assertEquals("1. Uruguay 6 - Italy 6\n" +
+                "2. Spain 10 - Brazil 2\n" +
+                "3. Mexico 1 - Canada 5\n" +
+                "4. Argentina 3 - Australia 1\n" +
+                "5. Germany 2 - France 2", summary);
     }
 }
