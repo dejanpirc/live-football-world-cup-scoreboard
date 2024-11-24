@@ -6,11 +6,11 @@ public class Team {
     
     public Team(String name) {
         if (name == null) {
-            throw new NullPointerException("Name must be set!");        
+            throw new NullPointerException(ErrorMessages.MISSING_TEAM_NAME.getMessage());        
         }
         // check if name contains only letters
         if (!name.matches("[\\p{L}]+")) {
-            throw new IllegalArgumentException("Invalid team name!");
+            throw new IllegalArgumentException(ErrorMessages.INVALID_TEAM_NAME.getMessage());
         }
         this.name = name;        
     }

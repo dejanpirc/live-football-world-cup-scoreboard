@@ -7,7 +7,7 @@ public class Match {
 
     public Match(Team homeTeam, Team awayTeam) {
         if (homeTeam == null || awayTeam == null) {
-            throw new NullPointerException("Home and away teams must be set!");
+            throw new NullPointerException(ErrorMessages.MISSING_HOME_AWAY_TEAMS.getMessage());
         }
         this.id = java.util.UUID.randomUUID().toString();
         this.homeTeam = homeTeam;

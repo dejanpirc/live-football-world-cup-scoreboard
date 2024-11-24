@@ -25,18 +25,15 @@ public class Scoreboard {
             // sort by recently started
             int match1Index = liveMatches.indexOf(match1);
             int match2Index = liveMatches.indexOf(match2);
-            
+
             // compare insertion order in descending order
             return Integer.compare(match2Index, match1Index);
         }
     };
 
-    public Scoreboard() {
-    }
-
     private boolean validateMatch(Match match) throws InvalidParameterException {
         if (match == null) {
-            throw new NullPointerException("Match must be set!");
+            throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         // check if one of the teams is already playing in another match
         return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam())
@@ -47,7 +44,7 @@ public class Scoreboard {
         for (Match match : liveMatches) {
             if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
                 throw new InvalidParameterException(
-                        "Invalid match: team " + team.getName() + " is already playing in another match!");
+                        String.format(ErrorMessages.TEAM_ALREADY_PLAYING.getMessage(), team.getName()));
             }
         }
         return false;
@@ -57,21 +54,21 @@ public class Scoreboard {
         // validate
         validateMatch(match);
 
-        liveMatches.add(match);
-        // todo optimise this to call method in match to set scores to 0
         match.getHomeTeam().setScore(0);
         match.getAwayTeam().setScore(0);
+
+        liveMatches.add(match);
     }
 
     public void updateScore(Match match, int homeTeamScore, int awayTeamScore) {
         if (match == null) {
-            throw new NullPointerException("Match must be set!");
+            throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         if (homeTeamScore < 0 || awayTeamScore < 0) {
-            throw new InvalidParameterException("Score must be positive!");
+            throw new InvalidParameterException(ErrorMessages.NEGATIVE_SCORE.getMessage());
         }
         if (!liveMatches.contains(match)) {
-            throw new InvalidParameterException("Only live matches can be updated!");
+            throw new InvalidParameterException(ErrorMessages.UPDATE_NOT_LIVE_MATCH.getMessage());
         }
 
         match.getHomeTeam().setScore(homeTeamScore);
@@ -80,10 +77,10 @@ public class Scoreboard {
 
     public void endMatch(Match match) {
         if (match == null) {
-            throw new NullPointerException("Match must be set!");
+            throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         if (!liveMatches.contains(match)) {
-            throw new InvalidParameterException("Only live matches can be ended!");
+            throw new InvalidParameterException(ErrorMessages.END_NOT_LIVE_MATCH.getMessage());
         }
 
         liveMatches.remove(match);
@@ -94,7 +91,7 @@ public class Scoreboard {
     }
 
     public String getSummary() {
-        String summary = "";
+        StringBuilder summary = new StringBuilder();
 
         if (!liveMatches.isEmpty()) {
             // sort live matches
@@ -103,21 +100,21 @@ public class Scoreboard {
             // build summary
             for (int i = 0; i < liveMatches.size(); i++) {
                 Match match = liveMatches.get(i);
-                summary += String.format("%d. %s %d - %s %d",
+                summary.append(String.format("%d. %s %d - %s %d",
                         i + 1,
                         match.getHomeTeam().getName(),
                         match.getHomeTeam().getScore(),
                         match.getAwayTeam().getName(),
-                        match.getAwayTeam().getScore());
+                        match.getAwayTeam().getScore()));
 
                 if (i < liveMatches.size() - 1) {
-                    summary += "\n";
+                    summary.append("\n");
                 }
             }
         } else {
-            summary = "No live matches.";
+            summary.append(ErrorMessages.NO_LIVE_MATCHES.getMessage());
         }
 
-        return summary;
+        return summary.toString();
     }
 }
