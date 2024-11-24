@@ -28,7 +28,7 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void startMatch_teamIsAlreadyPlayingInOtherMatch_throwsException() {
+    public void startMatch_teamIsAlreadyPlayingInAnotherMatch_throwsException() {
         Team homeTeam = new Team("Mexico");
         Team awayTeam = new Team("Canada");
         Match match = new Match(homeTeam, awayTeam);
@@ -36,7 +36,75 @@ public class ScoreboardTest {
         scoreboard.startMatch(match);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match));
-        assertEquals("Invalid match: team Mexico is already playing in other match!", exception.getMessage());
+        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+    }
+
+    @Test
+    public void startMatch_homeTeamWithTheSameNameIsAlreadyPlayingInAnotherMatch_throwsException() {
+        // match 1
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        // match 2
+        Team homeTeam2 = new Team("Mexico");
+        Team awayTeam2 = new Team("Slovenia");
+        Match match2 = new Match(homeTeam2, awayTeam2);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+    }
+
+    @Test
+    public void startMatch_awayTeamWithTheSameNameIsAlreadyPlayingInAnotherMatch_throwsException() {
+        // match 1
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        // match 2
+        Team homeTeam2 = new Team("Germany");
+        Team awayTeam2 = new Team("Canada");
+        Match match2 = new Match(homeTeam2, awayTeam2);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+    }
+
+    @Test
+    public void startMatch_sameHomeTeamNameWithDifferentTextCase_throwsException() {
+        // match 1
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        // match 2
+        Team homeTeam2 = new Team("mexico");
+        Team awayTeam2 = new Team("Slovenia");
+        Match match2 = new Match(homeTeam2, awayTeam2);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
+    }
+
+    @Test
+    public void startMatch_sameAwayTeamNameWithDifferentTextCase_throwsException() {
+        // match 1
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        // match 2
+        Team homeTeam2 = new Team("Croatia");
+        Team awayTeam2 = new Team("canada");
+        Match match2 = new Match(homeTeam2, awayTeam2);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        assertEquals("Invalid match: team Canada is already playing in another match!", exception.getMessage());
     }
 
     @Test

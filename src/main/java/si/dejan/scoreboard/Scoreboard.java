@@ -15,14 +15,14 @@ public class Scoreboard {
         if (match == null) {
             throw new NullPointerException("Match must be set!");
         }
-        // check if one of the teams is already playing in other match
+        // check if one of the teams is already playing in another match
         return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam()) || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
     }
 
     private boolean checkIfTeamIsPlayingInOtherMatch(Team team) throws InvalidParameterException {
         for (Match match : liveMatches) {
             if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
-                throw new InvalidParameterException("Invalid match: team " + team.getName() + " is already playing in other match!");
+                throw new InvalidParameterException("Invalid match: team " + team.getName() + " is already playing in another match!");
             }
         }
         return false;
@@ -60,7 +60,7 @@ public class Scoreboard {
         if (!liveMatches.contains(match)) {
             throw new InvalidParameterException("Only live matches can be ended!");
         } 
-        
+
         liveMatches.remove(match);
     }
 
