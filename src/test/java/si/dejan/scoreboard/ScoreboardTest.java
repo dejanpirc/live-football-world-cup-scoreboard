@@ -108,4 +108,52 @@ public class ScoreboardTest {
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(null, 1, 2));
         assertEquals("Match must be set!", exception.getMessage());
     }
+
+    @Test
+    public void endMatch_matchIsLive_removesMatchFromLiveMatches() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+
+        scoreboard.endMatch(match);
+
+        assert (!scoreboard.isMatchLive());
+    }
+
+    @Test
+    public void endMatch_matchIsNotSet_throwsException() {
+        Scoreboard scoreboard = new Scoreboard();
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(null));
+
+        assertEquals("Match must be set!", exception.getMessage());
+    }
+
+    @Test
+    public void endMatch_matchIsNotLive_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(match));
+
+        assertEquals("Only live matches can be ended!", exception.getMessage());
+    }
+
+    @Test
+    public void endMatch_matchHasAlreadyEnded_throwsException() {
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        Scoreboard scoreboard = new Scoreboard();
+        scoreboard.startMatch(match);
+        scoreboard.endMatch(match);
+
+        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(match));
+
+        assertEquals("Only live matches can be ended!", exception.getMessage());
+    }
 }
