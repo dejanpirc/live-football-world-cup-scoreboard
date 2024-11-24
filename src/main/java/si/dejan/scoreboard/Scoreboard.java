@@ -52,4 +52,20 @@ public class Scoreboard {
         match.getHomeTeam().setScore(homeTeamScore);
         match.getAwayTeam().setScore(awayTeamScore);
     }
+
+    public void endMatch(Match match) {
+        if(match == null) {
+            throw new NullPointerException("Match must be set!");
+        }
+        if (!liveMatches.contains(match)) {
+            throw new InvalidParameterException("Only live matches can be ended!");
+        } 
+        
+        liveMatches.remove(match);
+    }
+
+    public boolean isMatchLive(Match match) {
+        return liveMatches.contains(match);
+    }
+
 }

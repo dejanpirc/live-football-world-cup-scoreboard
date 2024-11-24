@@ -15,8 +15,8 @@ public class ScoreboardTest {
 
         scoreboard.startMatch(match);
 
-        assert (match.getHomeTeam().getScore() == 0);
-        assert (match.getAwayTeam().getScore() == 0);
+        assertEquals(0, match.getHomeTeam().getScore());
+        assertEquals(0, match.getAwayTeam().getScore());
     }
 
     @Test
@@ -49,8 +49,8 @@ public class ScoreboardTest {
 
         scoreboard.updateScore(match, 1, 2);
 
-        assert (match.getHomeTeam().getScore() == 1);
-        assert (match.getAwayTeam().getScore() == 2);
+        assertEquals(1, match.getHomeTeam().getScore());
+        assertEquals(2,match.getAwayTeam().getScore());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ScoreboardTest {
         scoreboard.endMatch(match);
 
         Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
-        assertEquals("Match has already ended!", exception.getMessage());
+        assertEquals("Only live matches can be updated!", exception.getMessage());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class ScoreboardTest {
 
         scoreboard.endMatch(match);
 
-        assert (!scoreboard.isMatchLive());
+        assertEquals(false, scoreboard.isMatchLive(match));
     }
 
     @Test
