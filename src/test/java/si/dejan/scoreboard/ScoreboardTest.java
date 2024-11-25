@@ -1,8 +1,8 @@
 package si.dejan.scoreboard;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ScoreboardTest {
 
@@ -23,7 +23,7 @@ public class ScoreboardTest {
     public void startMatch_matchIsNotSet_throwsException() {
         Scoreboard scoreboard = new Scoreboard();
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(null));
+        Exception exception = assertThrows(NullPointerException.class, () -> scoreboard.startMatch(null));
         assertEquals("Match must be set!", exception.getMessage());
     }
 
@@ -35,7 +35,7 @@ public class ScoreboardTest {
         Scoreboard scoreboard = new Scoreboard();
         scoreboard.startMatch(match);
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.startMatch(match));
         assertEquals("Invalid match: team Mexico is already playing in another match!", exception.getMessage());
     }
 
@@ -80,7 +80,7 @@ public class ScoreboardTest {
         Match match = new Match(homeTeam, awayTeam);
         Scoreboard scoreboard = new Scoreboard();
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.updateScore(match, 1, 2));
         assertEquals("Only live matches can be updated!", exception.getMessage());
     }
 
@@ -108,7 +108,7 @@ public class ScoreboardTest {
         scoreboard.startMatch(match);
         scoreboard.endMatch(match);
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(match, 1, 2));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.updateScore(match, 1, 2));
         assertEquals("Only live matches can be updated!", exception.getMessage());
     }
 
@@ -116,7 +116,7 @@ public class ScoreboardTest {
     public void updateScore_matchIsNotSet_throwsException() {
         Scoreboard scoreboard = new Scoreboard();
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.updateScore(null, 1, 2));
+        Exception exception = assertThrows(NullPointerException.class, () -> scoreboard.updateScore(null, 1, 2));
         assertEquals("Match must be set!", exception.getMessage());
     }
 
@@ -130,14 +130,14 @@ public class ScoreboardTest {
 
         scoreboard.endMatch(match);
 
-        assertEquals(false, scoreboard.isMatchLive(match));
+        assertFalse(scoreboard.isMatchLive(match));
     }
 
     @Test
     public void endMatch_matchIsNotSet_throwsException() {
         Scoreboard scoreboard = new Scoreboard();
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(null));
+        Exception exception = assertThrows(NullPointerException.class, () -> scoreboard.endMatch(null));
 
         assertEquals("Match must be set!", exception.getMessage());
     }
@@ -149,7 +149,7 @@ public class ScoreboardTest {
         Match match = new Match(homeTeam, awayTeam);
         Scoreboard scoreboard = new Scoreboard();
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(match));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.endMatch(match));
 
         assertEquals("Only live matches can be ended!", exception.getMessage());
     }
@@ -163,7 +163,7 @@ public class ScoreboardTest {
         scoreboard.startMatch(match);
         scoreboard.endMatch(match);
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.endMatch(match));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.endMatch(match));
 
         assertEquals("Only live matches can be ended!", exception.getMessage());
     }
@@ -240,7 +240,7 @@ public class ScoreboardTest {
         Team awayTeam2 = new Team(match2AwayTeam);
         Match match2 = new Match(homeTeam2, awayTeam2);
 
-        Exception exception = assertThrows(Exception.class, () -> scoreboard.startMatch(match2));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.startMatch(match2));
         assertEquals(errorMessage, exception.getMessage());
     }
 

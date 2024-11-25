@@ -8,14 +8,14 @@ import org.junit.Test;
 public class TeamTest {
 
     private void assertInvalidTeamName(String name) {
-        Exception exception = assertThrows(Exception.class, () -> new Team(name));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new Team(name));
 
         assertEquals("Invalid team name!", exception.getMessage());
     }
 
     @Test
     public void newTeam_teamNameIsNull_throwsException() {
-        Exception exception = assertThrows(Exception.class, () -> new Team(null));
+        Exception exception = assertThrows(NullPointerException.class, () -> new Team(null));
 
         assertEquals("Name must be set!", exception.getMessage());
     }

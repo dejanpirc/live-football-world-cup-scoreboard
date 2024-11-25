@@ -1,19 +1,18 @@
 package si.dejan.scoreboard;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Scoreboard {
 
-    private List<Match> liveMatches = new ArrayList<>();
+    private final List<Match> liveMatches = new ArrayList<>();
 
     // compare live matches by total score and recently started
     Comparator<Match> totalScoreComparator = (match1, match2) -> {
-        // sorty by total score
-        int totalScore1 = match1.getHomeTeam().getScore() + match1.getAwayTeam().getScore();
-        int totalScore2 = match2.getHomeTeam().getScore() + match2.getAwayTeam().getScore();
+        // sort by total score
+        int totalScore1 = match1.getTotalScore();
+        int totalScore2 = match2.getTotalScore();
 
         // compare total scores in descending order
         int scoreComparison = Integer.compare(totalScore2, totalScore1);
@@ -46,10 +45,10 @@ public class Scoreboard {
             throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         if (homeTeamScore < 0 || awayTeamScore < 0) {
-            throw new InvalidParameterException(ErrorMessages.NEGATIVE_SCORE.getMessage());
+            throw new IllegalArgumentException(ErrorMessages.NEGATIVE_SCORE.getMessage());
         }
         if (!liveMatches.contains(match)) {
-            throw new InvalidParameterException(ErrorMessages.UPDATE_NOT_LIVE_MATCH.getMessage());
+            throw new IllegalArgumentException(ErrorMessages.UPDATE_NOT_LIVE_MATCH.getMessage());
         }
 
         match.getHomeTeam().setScore(homeTeamScore);
@@ -61,7 +60,7 @@ public class Scoreboard {
             throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         if (!liveMatches.contains(match)) {
-            throw new InvalidParameterException(ErrorMessages.END_NOT_LIVE_MATCH.getMessage());
+            throw new IllegalArgumentException(ErrorMessages.END_NOT_LIVE_MATCH.getMessage());
         }
 
         liveMatches.remove(match);
@@ -99,22 +98,21 @@ public class Scoreboard {
         return summary.toString();
     }
 
-    private boolean validateMatch(Match match) throws InvalidParameterException {
+    private void validateMatch(Match match) throws IllegalArgumentException {
         if (match == null) {
             throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
         // check if one of the teams is already playing in another match
-        return checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam())
-                || checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
+        checkIfTeamIsPlayingInOtherMatch(match.getHomeTeam());
+        checkIfTeamIsPlayingInOtherMatch(match.getAwayTeam());
     }
 
-    private boolean checkIfTeamIsPlayingInOtherMatch(Team team) throws InvalidParameterException {
+    private void checkIfTeamIsPlayingInOtherMatch(Team team) throws IllegalArgumentException {
         for (Match match : liveMatches) {
             if (match.getHomeTeam().equals(team) || match.getAwayTeam().equals(team)) {
-                throw new InvalidParameterException(
+                throw new IllegalArgumentException(
                         String.format(ErrorMessages.TEAM_ALREADY_PLAYING.getMessage(), team.getName()));
             }
         }
-        return false;
     }
 }

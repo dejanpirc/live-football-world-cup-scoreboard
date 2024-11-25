@@ -2,8 +2,8 @@ package si.dejan.scoreboard;
 
 public class Match {
     private String id;
-    private Team homeTeam;
-    private Team awayTeam;
+    private final Team homeTeam;
+    private final Team awayTeam;
 
     public Match(Team homeTeam, Team awayTeam) {
         if (homeTeam == null || awayTeam == null) {
@@ -25,12 +25,15 @@ public class Match {
 
     public Team getAwayTeam() {
         return awayTeam;
-    }   
+    }
+
+    public int getTotalScore() {
+        return homeTeam.getScore() + awayTeam.getScore();
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Match) {
-            Match otherMatch = (Match) obj;
+        if (obj instanceof Match otherMatch) {
             return this.id.equals(otherMatch.getId());
         }
         return false;

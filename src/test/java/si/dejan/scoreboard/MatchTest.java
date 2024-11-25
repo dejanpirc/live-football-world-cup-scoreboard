@@ -8,7 +8,7 @@ import org.junit.Test;
 public class MatchTest {
 
     private void assertNoHomeAwayTeam(Team homeTeam, Team awayTeam) {
-        Exception exception = assertThrows(Exception.class, () -> new Match(homeTeam, awayTeam));
+        Exception exception = assertThrows(NullPointerException.class, () -> new Match(homeTeam, awayTeam));
 
         assertEquals("Home and away teams must be set!", exception.getMessage());
     }
