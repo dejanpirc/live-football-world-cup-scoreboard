@@ -1,7 +1,6 @@
 package si.dejan.scoreboard;
 
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 public class ScoreboardTest {
@@ -205,7 +204,7 @@ public class ScoreboardTest {
     }
 
     @Test
-    public void getSummary_multipleLiveMatches_returnsSummaryOfLiveMathesOrderedByMatchTotalScoreAndRecentlyStarted() {
+    public void getSummary_multipleLiveMatches_returnsSummaryOfLiveMatchesOrderedByMatchTotalScoreAndRecentlyStarted() {
         Scoreboard scoreboard = new Scoreboard();
         startMatchAndUpdateScore(scoreboard, "Mexico", "Canada", 0, 5);
         startMatchAndUpdateScore(scoreboard, "Spain", "Brazil", 10, 2);
@@ -215,11 +214,12 @@ public class ScoreboardTest {
 
         String summary = scoreboard.getSummary();
 
-        assertEquals("1. Uruguay 6 - Italy 6\n" +
-                "2. Spain 10 - Brazil 2\n" +
-                "3. Mexico 0 - Canada 5\n" +
-                "4. Argentina 3 - Australia 1\n" +
-                "5. Germany 2 - France 2", summary);
+        assertEquals("""
+                1. Uruguay 6 - Italy 6
+                2. Spain 10 - Brazil 2
+                3. Mexico 0 - Canada 5
+                4. Argentina 3 - Australia 1
+                5. Germany 2 - France 2""", summary);
     }
 
     private void startMatchAndUpdateScore(Scoreboard scoreboard, String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
