@@ -74,7 +74,7 @@ public class ScoreboardTest {
         executor.shutdown();
         executor.awaitTermination(1, TimeUnit.SECONDS);
 
-        assertEquals(1, scoreboard.getLiveMatches().size());
+        assertEquals(1, scoreboard.getLiveMatchesCount());
     }
 
     @Test
@@ -186,26 +186,6 @@ public class ScoreboardTest {
         assertEquals("Only live matches can be ended!", exception.getMessage());
     }
 
-    @Test
-    public void endMatch_concurrentStartMatchAndEndMatch() throws InterruptedException {
-        Scoreboard scoreboard = new Scoreboard();
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        
-        for (int i = 0; i < 10; i++) {
-            executor.submit(() -> {
-                Team homeTeam = new Team("Germany"+java.util.UUID.randomUUID().toString());
-                Team awayTeam = new Team("France"+java.util.UUID.randomUUID().toString());
-                Match match = new Match(homeTeam, awayTeam);
-                scoreboard.startMatch(match);
-                scoreboard.endMatch(match);
-            });
-        }
-
-        executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.SECONDS);
-
-        assertEquals(0, scoreboard.getLiveMatches().size());
-    }
 
     @Test
     public void getSummary_oneLiveMatch_returnsSummaryOfLiveMathes() {

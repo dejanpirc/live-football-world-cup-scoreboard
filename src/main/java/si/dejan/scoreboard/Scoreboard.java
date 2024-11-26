@@ -30,7 +30,7 @@ public class Scoreboard {
         }
     };
 
-    public void startMatch(Match match) {
+    public synchronized void startMatch(Match match) {
         // validate
         validateMatch(match);
 
@@ -114,5 +114,9 @@ public class Scoreboard {
                         String.format(ErrorMessages.TEAM_ALREADY_PLAYING.getMessage(), team.getName()));
             }
         }
+    }
+
+    public int getLiveMatchesCount() {
+        return liveMatches.size();
     }
 }
