@@ -3,6 +3,10 @@ package si.dejan.scoreboard;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class ScoreboardTest {
 
     @Test
@@ -56,6 +60,21 @@ public class ScoreboardTest {
     @Test
     public void startMatch_sameAwayTeamNameWithDifferentTextCase_throwsException() {
         assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "Croatia", "canada", "Invalid match: team canada is already playing in another match!");
+    }
+
+     @Test
+    public void startMatch_concurrentStartMatch_onlyOneMatchIsStarted() throws InterruptedException {
+        Scoreboard scoreboard = new Scoreboard();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        for (int i = 0; i < 10; i++) {
+            executor.submit((Runnable) () -> scoreboard.startMatch(new Match(new Team("Mexico"), new Team("Canada"))));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.SECONDS);
+
+        assertEquals(1, scoreboard.getLiveMatches().size());
     }
 
     @Test
@@ -165,6 +184,27 @@ public class ScoreboardTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.endMatch(match));
 
         assertEquals("Only live matches can be ended!", exception.getMessage());
+    }
+
+    @Test
+    public void endMatch_concurrentStartMatchAndEndMatch() throws InterruptedException {
+        Scoreboard scoreboard = new Scoreboard();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        
+        for (int i = 0; i < 10; i++) {
+            executor.submit(() -> {
+                Team homeTeam = new Team("Germany"+java.util.UUID.randomUUID().toString());
+                Team awayTeam = new Team("France"+java.util.UUID.randomUUID().toString());
+                Match match = new Match(homeTeam, awayTeam);
+                scoreboard.startMatch(match);
+                scoreboard.endMatch(match);
+            });
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.SECONDS);
+
+        assertEquals(0, scoreboard.getLiveMatches().size());
     }
 
     @Test
