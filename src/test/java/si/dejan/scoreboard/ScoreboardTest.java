@@ -1,6 +1,7 @@
 package si.dejan.scoreboard;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import java.util.concurrent.ExecutorService;
@@ -62,7 +63,7 @@ public class ScoreboardTest {
         assertTeamAlreadyPlayingInAnotherMatch("Mexico", "Canada", "Croatia", "canada", "Invalid match: team canada is already playing in another match!");
     }
 
-     @Test
+    @Test
     public void startMatch_concurrentStartMatch_onlyOneMatchIsStarted() throws InterruptedException {
         Scoreboard scoreboard = new Scoreboard();
         ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -136,6 +137,31 @@ public class ScoreboardTest {
 
         Exception exception = assertThrows(NullPointerException.class, () -> scoreboard.updateScore(null, 1, 2));
         assertEquals("Match must be set!", exception.getMessage());
+    }
+
+    @Test
+    public void updateScore_concurrentUpdates_scoresAreUpdatedCorrectly() throws InterruptedException {
+        Scoreboard scoreboard = new Scoreboard();
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        scoreboard.startMatch(match);
+
+        int numberOfThreads = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            final int homeScore = i;
+            final int awayScore = i + 1;
+            executor.submit(() -> scoreboard.updateScore(match, homeScore, awayScore));
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.SECONDS);
+
+        // Verify that the final scores are as expected
+        assertEquals(numberOfThreads - 1, match.getHomeTeam().getScore());
+        assertEquals(numberOfThreads, match.getAwayTeam().getScore());
     }
 
     @Test

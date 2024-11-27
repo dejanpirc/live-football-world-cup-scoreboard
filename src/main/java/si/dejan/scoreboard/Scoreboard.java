@@ -40,7 +40,7 @@ public class Scoreboard {
         liveMatches.add(match);
     }
 
-    public void updateScore(Match match, int homeTeamScore, int awayTeamScore) {
+    public synchronized void updateScore(Match match, int homeTeamScore, int awayTeamScore) {
         if (match == null) {
             throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
