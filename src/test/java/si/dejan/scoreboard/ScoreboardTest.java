@@ -212,6 +212,35 @@ public class ScoreboardTest {
         assertEquals("Only live matches can be ended!", exception.getMessage());
     }
 
+    @Test
+    public void endMatch_concurrentEndMatch_onlyOneThreadEndsMatch() throws InterruptedException {
+        Scoreboard scoreboard = new Scoreboard();
+        Team homeTeam = new Team("Mexico");
+        Team awayTeam = new Team("Canada");
+        Match match = new Match(homeTeam, awayTeam);
+        scoreboard.startMatch(match);
+
+        int numberOfThreads = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            executor.submit(() -> {
+                try {
+                    scoreboard.endMatch(match);
+                } catch (Exception e) {
+                    // Handle exceptions if any
+                }
+            });
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.SECONDS);
+
+        // Verify that the match is no longer live
+        assertFalse(scoreboard.isMatchLive(match));
+        // Verify that the live matches count is zero
+        assertEquals(0, scoreboard.getLiveMatchesCount());
+    }
 
     @Test
     public void getSummary_oneLiveMatch_returnsSummaryOfLiveMathes() {

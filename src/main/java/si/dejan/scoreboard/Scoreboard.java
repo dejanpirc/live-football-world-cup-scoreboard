@@ -55,7 +55,7 @@ public class Scoreboard {
         match.getAwayTeam().setScore(awayTeamScore);
     }
 
-    public void endMatch(Match match) {
+    public synchronized void endMatch(Match match) {
         if (match == null) {
             throw new NullPointerException(ErrorMessages.MATCH_NOT_SET.getMessage());
         }
